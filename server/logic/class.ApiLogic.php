@@ -69,7 +69,14 @@
 		}
 		
 		public static function compare($sUrl1, $sUrl2) {
-			
+				$nSiteId1 = Mysql::getValue(
+					'SELECT id FROM site WHERE url = $1', [$sUrl1]
+				);
+				
+				
+			//get SiteId by Url1
+			//get WordId by SiteId for Url1
+			//
 		}
 	}
 
