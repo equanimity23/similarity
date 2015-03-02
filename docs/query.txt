@@ -23,71 +23,16 @@ ON       t1.word_id = t2.word_id
 WHERE    t1.site_id = 1 AND t2.site_id = 2
 GROUP BY t1.id;
 
-A	B
-a	a
-a	a
-a	a
-a	-
--	b
-
-3/5 = 0,6
-
-SELECT word_id, count FROM site_word 
-
-Result:
-
-word_id  count site_id
-
-SELECT t1.site_id AS site1, t2.site_id AS site2, t1.word_id AS word1, t2.word_id AS word2, t1.count AS count1, t2.count AS count2
-	FROM site_word1 AS t1
-	LEFT JOIN site_word1 AS t2
-	ON t1.word_id = t2.word_id OR t1.word_id IS NULL OR t2.word_id IS NULL
-	WHERE t1.site_id < t2.site_id
-
-UNION
-
-SELECT t1.site_id AS site1, t2.site_id AS site2, t1.word_id AS word1, t2.word_id AS word2, t1.count AS count1, t2.count AS count2
-	FROM site_word1 AS t1
-	RIGHT JOIN site_word1 AS t2
-	ON t1.word_id = t2.word_id OR t1.word_id IS NULL OR t2.word_id IS NULL
-	WHERE t1.site_id < t2.site_id
-	
-	
-SELECT SUM(MIN_VALUE(sw1.count, sw2.count)) AS match 
-	FROM site_words AS sw1
-	INNER JOIN site_words AS sw2
-	ON sw1.word_id = sw2.word_id
-	WHERE sw1.site_id = $1 AND sw2.site_id = $2
-	GROUP BY sw1.id
-	
-SELECT 
-	-- t1.site_id AS site1,
-	-- t1.word_id AS word1,
-	-- t1.count   AS count1,
-	-- 
-	-- t2.site_id AS site2,
-	-- t2.word_id AS word2,
-	-- t2.count   AS count2,
-
-	SUM(LEAST(t1.count, t2.count)) -- Numerator, amount of matches
-
-	/ -- Divided by
-
-	(
-		SELECT SUM(s)
-		FROM (
-				SELECT 1 AS my_group, MAX(sw.count) AS s
-				FROM sw 
-				WHERE site_id = 1 OR site_id = 2 
-				GROUP BY word_id
-			) AS t
-		GROUP BY my_group
-	) -- Denominator, total amount of words
-
-	AS result
-
-FROM     sw AS t1
-JOIN     sw AS t2
+SELECT count(t1.id), 1 AS c
+FROM     site_word AS t1
+JOIN     site_word AS t2
 ON       t1.word_id = t2.word_id
-WHERE    t1.site_id = 1 AND t2.site_id = 2
-GROUP BY t1.id;
+WHERE    t1.site_id = 4 AND t2.site_id = 5
+GROUP BY c;
+
+SELECT SUM(LEAST(t1.count, t2.count)) AS result, 1 AS c
+FROM     site_word AS t1
+JOIN     site_word AS t2
+ON       t1.word_id = t2.word_id
+WHERE    t1.site_id = 4 AND t2.site_id = 5
+GROUP BY c;
